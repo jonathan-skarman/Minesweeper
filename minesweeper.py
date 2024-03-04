@@ -20,7 +20,7 @@ def place_mines(height, width, mines): #sets where the mines are
 	i = 0
 	board = create_board(height, width)
 	while i < mines:
-		board[randint(0, width - 1)][randint(0, height - 1)] = True
+		board[randint(0, width - 1)][randint(0, height - 1)] = True #if already true
 		i += 1
 	return board
 
@@ -28,13 +28,15 @@ def generate_nums(board):
 	width = len(board)
 	height = len(board[0])
 	x = 0
-	y = 0
+	
 	while x < width:
+		y = 0
 		while y < height:
-			if board[x][y] != True:
+			if board[x][y] == False:
 				board[x][y] = adjacent_amount(board, x, y)
 			y += 1
 		x += 1
+	return board
 
 def adjacent_amount(board, x, y):
 	width = len(board) - 1
@@ -60,6 +62,8 @@ def adjacent_amount(board, x, y):
 	return amount
 
 
+
+print(generate_nums(place_mines(5, 5, 5)))
 
 def runner(height, width, mines):
 	board = generate_nums(place_mines(height, width, mines))
