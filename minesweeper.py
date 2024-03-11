@@ -27,20 +27,6 @@ def place_mines(height, width, mines): #sets where the mines are
 			i += 1
 	return board
 
-def generate_nums(board):
-	width = len(board) 
-	height = len(board[0])
-
-	x = 0
-	while x < width:
-		y = 0
-		while y < height:
-			if board[x][y] == False:
-				board[x][y] = adjacent_amount(board, x, y)
-			y += 1
-		x += 1
-	return board
-
 def adjacent_amount(board, x, y):
 	width = len(board) - 1
 	height = len(board[x]) - 1
@@ -65,10 +51,8 @@ def adjacent_amount(board, x, y):
 	return amount
 
 
-def generate_nums2(board):
-	#check top left, and move downward checking one at a time, and replacing it with the number of adjacent
+def generate_nums(board):
 	x = 0
-	y = 0
 	#print (len(board))
 
 	while x < len(board):
@@ -82,6 +66,23 @@ def generate_nums2(board):
 
 	return board
 
+def generate_num_outOfPlace(board):
+	newBoard = []
+	x = 0
+
+	while x < len(board):
+		newBoard.append([])
+		y = 0
+		while y < len(board[x]):
+			if board[x][y] == False:
+				newBoard[x].append(adjacent_amount(board, x, y))
+			else:
+				newBoard[x].append(True)
+			y += 1
+		x += 1
+
+	return newBoard
+
 
 
 
@@ -90,20 +91,20 @@ def generate_nums2(board):
 #calculate the numbers for all other spaces (all spaces which are still == false)
 
 def runner(height, width, mines):
-	height = 3
-	width = 3
-	mines = 5
+	#height = 3
+	#width = 3
+	#mines = 5
 
 	board = place_mines(height, width, mines)
 	#print (board)
 
-	board = generate_nums2(board)
+	board = generate_num_outOfPlace(board)
 	#print board
 	return board
 
 
 
-#print (runner(3, 3, 5))
+print (runner(5, 5, 5))
 
-#print (generate_nums2([[False, False, True], [True, False, True], [False, True, True]]))
-print (adjacent_amount([[False, False, True], [True, False, True], [False, True, True]], 1, 1))
+#print (generate_num_outOfPlace([[False, False, True], [True, False, True], [False, True, True]]))
+#print (adjacent_amount([[False, False, True], [True, False, True], [False, True, True]], 1, 1))
