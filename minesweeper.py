@@ -17,15 +17,18 @@ def create_board(height, width): #creates a board with only false
 		i += 1
 	return board
 
-def place_mines(height, width, mines): #sets where the mines are
+def place_mines(height, width, mines, x, y): #sets where the mines are
 	i = 0
 	board = create_board(height, width)
 	while i < mines:
-		x = randint(0, width - 1)
-		y = randint(0, height - 1)
-		if board[x][y] != True:
-			board[x][y] = True #if already true
-			i += 1
+		x_ = randint(0, width - 1)
+		y_ = randint(0, height - 1)
+
+		#makes sure tile clicked and adjacent are safe
+		if not((x_ == x) or (x_ == x -1) or (x_ == x +1) or (y_ == y) or (y_ == y -1) or (y_ == y +1)):
+			if board[x_][y_] != True:
+				board[x_][y_] = True #if already true
+				i += 1
 	return board
 
 def adjacent_amount(board, x, y):
@@ -92,10 +95,6 @@ def generate_num_outOfPlace(board):
 #calculate the numbers for all other spaces (all spaces which are still == false)
 
 def runner(height, width, mines):
-	#height = 3
-	#width = 3
-	#mines = 5
-
 	board = place_mines(height, width, mines)
 	#print (board)
 
@@ -105,7 +104,7 @@ def runner(height, width, mines):
 
 
 
-print (runner(5, 5, 5))
+#print (runner(5, 5, 5))
 
 #print (generate_num_outOfPlace([[False, False, True], [True, False, True], [False, True, True]]))
 #print (adjacent_amount([[False, False, True], [True, False, True], [False, True, True]], 1, 1))
