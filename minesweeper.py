@@ -108,9 +108,3 @@ def runner(height, width, mines):
 
 #print (generate_num_outOfPlace([[False, False, True], [True, False, True], [False, True, True]]))
 #print (adjacent_amount([[False, False, True], [True, False, True], [False, True, True]], 1, 1))
-
-
-
-#implementing visuals through pygame
-#ASCII art (X for mine, number for adjacent mines, need to decide symbol for unopened space)
-#sprite art (find images online and steal them)

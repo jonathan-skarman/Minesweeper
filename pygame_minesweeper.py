@@ -1,9 +1,10 @@
 #variables, only positive integers, dont know what happens otherwise
-width = 30
-height = 20
+width = 7
+height = 7
 mines = 5
 
 import pygame
+import math
 from minesweeper import *
 
 pygame.init()
@@ -35,30 +36,52 @@ def draw_board(board):
 		while y < len(board[x]):
 			if board[x][y] == False:
 				screen.blit(tileUnknown, (x*16, y*16))
+			elif board[x][y] == "tileExploded":
+				screen.blit(tileExploded, (x*16, y*16))
+			elif board[x][y] == "tileEmpty":
+				screen.blit(tileEmpty, (x*16, y*16))
+			elif board[x][y] == "tile1":
+				screen.blit(tile1, (x*16, y*16))
+			elif board[x][y] == "tile1":
+				screen.blit(tile1, (x*16, y*16))
+			elif board[x][y] == "tile2":
+				screen.blit(tile2, (x*16, y*16))
+			elif board[x][y] == "tile3":
+				screen.blit(tile3, (x*16, y*16))
+			elif board[x][y] == "tile4":
+				screen.blit(tile4, (x*16, y*16))
+			elif board[x][y] == "tile5":
+				screen.blit(tile5, (x*16, y*16))
+			elif board[x][y] == "tile6":
+				screen.blit(tile6, (x*16, y*16))
+			elif board[x][y] == "tile7":
+				screen.blit(tile7, (x*16, y*16))
+			elif board[x][y] == "tile8":
+				screen.blit(tile8, (x*16, y*16))
 			y += 1
 		x += 1
 
 def open_square(board_shown, board_hidden, x, y):
 	if board_hidden[x][y] == True:
-		board_shown[x][y] = tileExploded
+		board_shown[x][y] = "tileExploded"
 	elif board_hidden[x][y] == 0:
-		board_shown[x][y] = tileEmpty
+		board_shown[x][y] = "tileEmpty"
 	elif board_hidden[x][y] == 1:
-		board_shown[x][y] = tile1
+		board_shown[x][y] = "tile1"
 	elif board_hidden[x][y] == 2:
-		board_shown[x][y] = tile2
+		board_shown[x][y] = "tile2"
 	elif board_hidden[x][y] == 3:
-		board_shown[x][y] = tile3
+		board_shown[x][y] = "tile3"
 	elif board_hidden[x][y] == 4:
-		board_shown[x][y] = tile4
+		board_shown[x][y] = "tile4"
 	elif board_hidden[x][y] == 5:
-		board_shown[x][y] = tile5
+		board_shown[x][y] = "tile5"
 	elif board_hidden[x][y] == 6:
-		board_shown[x][y] = tile6
+		board_shown[x][y] = "tile6"
 	elif board_hidden[x][y] == 7:
-		board_shown[x][y] = tile7
+		board_shown[x][y] = "tile7"
 	elif board_hidden[x][y] == 8:
-		board_shown[x][y] = tile8
+		board_shown[x][y] = "tile8"
 
 	return board_shown
 
@@ -67,9 +90,6 @@ def open_square(board_shown, board_hidden, x, y):
 def runner(width, height, mines):
 	player_board = create_board(height, width)
 	hidden_generated = False
-	pos[0] = -1
-	pos[1] = -1
-
 
 	run = True
 	while run:
@@ -81,18 +101,33 @@ def runner(width, height, mines):
 		for event in pygame.event.get():
 			if event.type == pygame.MOUSEBUTTONDOWN:
 				pos = pygame.mouse.get_pos()
+				button = pygame.mouse.get_pressed()
+
+				pos_ = [math.floor(pos[0]/16), math.floor(pos[1]/16)]
+				pos_x = int(pos_[0])
+				pos_y = int(pos_[1])
+				print(type(pos_x))
+				#print(pos_)
 				#print(event)
+				#print(type(button))
 				#pos / 16 rounded down gives what tile has been clicked
+
+
+				if (not(hidden_generated)) and (button[0]):
+					hidden_board = generate_num_outOfPlace(place_mines(height, width, mines, pos_[0], pos_[1]))
+					player_board = open_square(player_board, hidden_board, pos_[0], pos_[1])
+					hidden_generated = True
+
+				#if the clicked position isn't opened yet
+				#if player_board[pos[0]/16, pos[1]/16] == False:
+					
+				elif ((player_board[pos_x][pos_y]) == False) and (button[0]):
+					player_board = open_square(player_board, hidden_board, pos_[0], pos_[1])
+
+				#print(hidden_board)
+
 			if event.type == pygame.QUIT:
 				run = False
-
-		#if the clicked position isn't opened yet
-		if player_board[pos[0]/16, pos[1]/16] == False:
-			if not(hidden_generated):
-				hidden_board = place_mines(width, height, mines, pos[0]/16, pos[1]/16)
-				hidden_generated = True
-			else:
-				open_square(player_board, hidden_board, pos[0]/16, pos[1]/16)
 
 		pygame.display.update()
 	pygame.quit
