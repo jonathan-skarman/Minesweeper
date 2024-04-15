@@ -64,23 +64,23 @@ def draw_board(board):
 def open_square(board_shown, board_hidden, x, y):
 	if board_hidden[x][y] == True:
 		board_shown[x][y] = "tileExploded"
-	elif board_hidden[x][y] == 0:
+	elif board_hidden[x][y] == "0":
 		board_shown[x][y] = "tileEmpty"
-	elif board_hidden[x][y] == 1:
+	elif board_hidden[x][y] == "1":
 		board_shown[x][y] = "tile1"
-	elif board_hidden[x][y] == 2:
+	elif board_hidden[x][y] == "2":
 		board_shown[x][y] = "tile2"
-	elif board_hidden[x][y] == 3:
+	elif board_hidden[x][y] == "3":
 		board_shown[x][y] = "tile3"
-	elif board_hidden[x][y] == 4:
+	elif board_hidden[x][y] == "4":
 		board_shown[x][y] = "tile4"
-	elif board_hidden[x][y] == 5:
+	elif board_hidden[x][y] == "5":
 		board_shown[x][y] = "tile5"
-	elif board_hidden[x][y] == 6:
+	elif board_hidden[x][y] == "6":
 		board_shown[x][y] = "tile6"
-	elif board_hidden[x][y] == 7:
+	elif board_hidden[x][y] == "7":
 		board_shown[x][y] = "tile7"
-	elif board_hidden[x][y] == 8:
+	elif board_hidden[x][y] == "8":
 		board_shown[x][y] = "tile8"
 
 	return board_shown
@@ -106,14 +106,11 @@ def runner(width, height, mines):
 				pos_ = [math.floor(pos[0]/16), math.floor(pos[1]/16)]
 				pos_x = int(pos_[0])
 				pos_y = int(pos_[1])
-				print(type(pos_x))
-				#print(pos_)
-				#print(event)
-				#print(type(button))
+				
 				#pos / 16 rounded down gives what tile has been clicked
 
 
-				if (not(hidden_generated)) and (button[0]):
+				if (not(hidden_generated)) and (button[0]): #if hidden isn't generated and left mouse is clicked
 					hidden_board = generate_num_outOfPlace(place_mines(height, width, mines, pos_[0], pos_[1]))
 					player_board = open_square(player_board, hidden_board, pos_[0], pos_[1])
 					hidden_generated = True
@@ -122,6 +119,7 @@ def runner(width, height, mines):
 				#if player_board[pos[0]/16, pos[1]/16] == False:
 					
 				elif ((player_board[pos_x][pos_y]) == False) and (button[0]):
+					print(hidden_board)
 					player_board = open_square(player_board, hidden_board, pos_[0], pos_[1])
 
 				#print(hidden_board)

@@ -24,11 +24,10 @@ def place_mines(height, width, mines, x, y): #sets where the mines are
 		x_ = randint(0, width - 1)
 		y_ = randint(0, height - 1)
 
-		#makes sure tile clicked and adjacent are safe
-		if not((x_ == x) or (x_ == x -1) or (x_ == x +1) or (y_ == y) or (y_ == y -1) or (y_ == y +1)):
-			if board[x_][y_] != True:
-				board[x_][y_] = True #if already true
-				i += 1
+		#makes sure tile clicked and adjacent are safe, and current tile isn't a mine
+		if (not((x_ == x) or (x_ == x -1) or (x_ == x +1) or (y_ == y) or (y_ == y -1) or (y_ == y +1))) and (not(board[x_][y_] == True)):
+			board[x_][y_] = True #if already true
+			i += 1
 	return board
 
 def adjacent_amount(board, x, y):
@@ -79,7 +78,7 @@ def generate_num_outOfPlace(board):
 		y = 0
 		while y < len(board[x]):
 			if board[x][y] == False:
-				newBoard[x].append(adjacent_amount(board, x, y))
+				newBoard[x].append(str(adjacent_amount(board, x, y)))
 			else:
 				newBoard[x].append(True)
 			y += 1
