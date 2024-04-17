@@ -1,2 +1,2 @@
-x = str(1)
-print (type(x))
+import pygame
+print (pygame.ver)

@@ -7,6 +7,7 @@ import pygame
 import math
 from minesweeper import *
 
+
 pygame.init()
 screen_width = width * 16
 screen_height = height * 16
@@ -25,7 +26,8 @@ tile5 = pygame.image.load('Github Repositories/Tillämpad Programmering/Mineswee
 tile6 = pygame.image.load('Github Repositories/Tillämpad Programmering/Minesweeper/Sprites/Tile6.png').convert_alpha()
 tile7 = pygame.image.load('Github Repositories/Tillämpad Programmering/Minesweeper/Sprites/Tile7.png').convert_alpha()
 tile8 = pygame.image.load('Github Repositories/Tillämpad Programmering/Minesweeper/Sprites/Tile8.png').convert_alpha()
-
+tileFlag =pygame.image.load('Github Repositories/Tillämpad Programmering/Minesweeper/Sprites/TileFlag.png').convert_alpha()
+tileMine =pygame.image.load('Github Repositories/Tillämpad Programmering/Minesweeper/Sprites/TileMine.png').convert_alpha()
 
 
 #functions
@@ -58,12 +60,17 @@ def draw_board(board):
 				screen.blit(tile7, (x*16, y*16))
 			elif board[x][y] == "tile8":
 				screen.blit(tile8, (x*16, y*16))
+			elif board[x][y] == "tileFlag":
+				screen.blit(tileFlag, (x*16, y*16))
+			elif board[x][y] == "tileMine":
+				screen.blit(tileMine, (x*16, y*16))
 			y += 1
 		x += 1
 
 def open_square(board_shown, board_hidden, x, y):
 	if board_hidden[x][y] == True:
 		board_shown[x][y] = "tileExploded"
+		board_shown = loss(board_shown, board_hidden)
 	elif board_hidden[x][y] == "0":
 		board_shown[x][y] = "tileEmpty"
 	elif board_hidden[x][y] == "1":
@@ -84,6 +91,16 @@ def open_square(board_shown, board_hidden, x, y):
 		board_shown[x][y] = "tile8"
 
 	return board_shown
+
+def loss(board_shown, board_hidden):
+	x = 0
+	while x < len(board_shown):
+		y = 0
+		while y < len(board_shown[x]):
+			if (board_shown[x][y] == False) and (board_hidden[x][y] == True):
+				board_shown[x][y] = "tileMine"
+			y += 1
+		x += 1
 
 
 
@@ -119,9 +136,13 @@ def runner(width, height, mines):
 				#if player_board[pos[0]/16, pos[1]/16] == False:
 					
 				elif ((player_board[pos_x][pos_y]) == False) and (button[0]):
-					print(hidden_board)
+					#print(hidden_board)
 					player_board = open_square(player_board, hidden_board, pos_[0], pos_[1])
 
+				if ((player_board[pos_x][pos_y]) == False) and (button[2]):
+					player_board[pos_x][pos_y] = "tileFlag"
+				elif ((player_board[pos_x][pos_y]) == "tileFlag") and (button[2]):
+					player_board[pos_x][pos_y] = False
 				#print(hidden_board)
 
 			if event.type == pygame.QUIT:
