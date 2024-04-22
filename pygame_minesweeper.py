@@ -1,11 +1,16 @@
 #variables, only positive integers, dont know what happens otherwise
-width = 7
-height = 7
-mines = 5
+width = 16
+height = 16
+mines = 40
 
+alive = True
+not_mines = ((width * height) - mines)
+
+from turtle import delay
 import pygame
 import math
 from minesweeper import *
+#import time
 
 
 pygame.init()
@@ -26,8 +31,10 @@ tile5 = pygame.image.load('Github Repositories/Tillämpad Programmering/Mineswee
 tile6 = pygame.image.load('Github Repositories/Tillämpad Programmering/Minesweeper/Sprites/Tile6.png').convert_alpha()
 tile7 = pygame.image.load('Github Repositories/Tillämpad Programmering/Minesweeper/Sprites/Tile7.png').convert_alpha()
 tile8 = pygame.image.load('Github Repositories/Tillämpad Programmering/Minesweeper/Sprites/Tile8.png').convert_alpha()
-tileFlag =pygame.image.load('Github Repositories/Tillämpad Programmering/Minesweeper/Sprites/TileFlag.png').convert_alpha()
-tileMine =pygame.image.load('Github Repositories/Tillämpad Programmering/Minesweeper/Sprites/TileMine.png').convert_alpha()
+tileFlag = pygame.image.load('Github Repositories/Tillämpad Programmering/Minesweeper/Sprites/TileFlag.png').convert_alpha()
+tileMine = pygame.image.load('Github Repositories/Tillämpad Programmering/Minesweeper/Sprites/TileMine.png').convert_alpha()
+tileNotMine = pygame.image.load('Github Repositories/Tillämpad Programmering/Minesweeper/Sprites/TileNotMine.png').convert_alpha()
+
 
 
 #functions
@@ -64,15 +71,22 @@ def draw_board(board):
 				screen.blit(tileFlag, (x*16, y*16))
 			elif board[x][y] == "tileMine":
 				screen.blit(tileMine, (x*16, y*16))
+			elif board[x][y] == "tileNotMine":
+				screen.blit(tileNotMine, (x*16, y*16))
 			y += 1
 		x += 1
 
 def open_square(board_shown, board_hidden, x, y):
+	global not_mines
 	if board_hidden[x][y] == True:
 		board_shown[x][y] = "tileExploded"
+		global alive 
+		alive = False
+		not_mines += 1
 		board_shown = loss(board_shown, board_hidden)
 	elif board_hidden[x][y] == "0":
 		board_shown[x][y] = "tileEmpty"
+		board_shown = open_adjacent(board_shown, board_hidden, x, y)
 	elif board_hidden[x][y] == "1":
 		board_shown[x][y] = "tile1"
 	elif board_hidden[x][y] == "2":
@@ -90,6 +104,29 @@ def open_square(board_shown, board_hidden, x, y):
 	elif board_hidden[x][y] == "8":
 		board_shown[x][y] = "tile8"
 
+	not_mines -= 1
+	return board_shown
+
+def open_adjacent(board_shown, board_hidden, x, y):
+	width = len(board_shown) - 1
+	height = len(board_shown[x]) - 1
+
+	if (x != 0) and (y != 0) and (board_shown[x-1][y-1] == False): #top left
+		board_shown = open_square(board_shown, board_hidden, x-1, y-1)
+	if (x != 0) and (board_shown[x-1][y] == False): #middle left
+		board_shown = open_square(board_shown, board_hidden, x-1, y)
+	if (x != 0) and (y != height) and (board_shown[x-1][y+1] == False):# bottom left
+		board_shown = open_square(board_shown, board_hidden, x-1, y+1)
+	if (y != 0) and (board_shown[x][y-1] == False): #top middle
+		board_shown = open_square(board_shown, board_hidden, x, y-1)
+	if (y != height) and (board_shown[x][y+1] == False): #bottom middle
+		board_shown = open_square(board_shown, board_hidden, x, y+1)
+	if (x != width) and (y != 0) and (board_shown[x+1][y-1] == False): #top right
+		board_shown = open_square(board_shown, board_hidden, x+1, y-1)
+	if (x != width) and (board_shown[x+1][y] == False): #middle right
+		board_shown = open_square(board_shown, board_hidden, x+1, y)
+	if (x != width) and (y != height) and (board_shown[x+1][y+1] == False):
+		board_shown = open_square(board_shown, board_hidden, x+1, y+1)
 	return board_shown
 
 def loss(board_shown, board_hidden):
@@ -99,8 +136,24 @@ def loss(board_shown, board_hidden):
 		while y < len(board_shown[x]):
 			if (board_shown[x][y] == False) and (board_hidden[x][y] == True):
 				board_shown[x][y] = "tileMine"
+			if (board_shown[x][y] == "tileFlag") and (not(board_hidden[x][y] == True)):
+				board_shown[x][y] = "tileNotMine"
 			y += 1
 		x += 1
+	
+	return board_shown
+
+def win(board_shown, board_hidden):
+	x = 0
+	while x < len(board_shown):
+		y = 0
+		while y < len(board_shown[x]):
+			if (board_shown[x][y] == False) and (board_hidden[x][y] == True):
+				board_shown[x][y] = "tileFlag"
+			y += 1
+		x += 1
+	
+	return board_shown
 
 
 
@@ -109,6 +162,9 @@ def runner(width, height, mines):
 	hidden_generated = False
 
 	run = True
+	global alive
+	global not_mines
+
 	while run:
 		#updates background, 
 		screen.fill((50, 50, 50))
@@ -135,15 +191,23 @@ def runner(width, height, mines):
 				#if the clicked position isn't opened yet
 				#if player_board[pos[0]/16, pos[1]/16] == False:
 					
-				elif ((player_board[pos_x][pos_y]) == False) and (button[0]):
+				elif ((player_board[pos_x][pos_y]) == False) and (button[0]) and (alive == True):
 					#print(hidden_board)
 					player_board = open_square(player_board, hidden_board, pos_[0], pos_[1])
 
-				if ((player_board[pos_x][pos_y]) == False) and (button[2]):
+				if ((player_board[pos_x][pos_y]) == False) and (button[2]) and (alive == True):
 					player_board[pos_x][pos_y] = "tileFlag"
-				elif ((player_board[pos_x][pos_y]) == "tileFlag") and (button[2]):
+
+				elif ((player_board[pos_x][pos_y]) == "tileFlag") and (button[2]) and (alive == True):
 					player_board[pos_x][pos_y] = False
-				#print(hidden_board)
+
+				elif (((player_board[pos_x][pos_y]) == tile1) or ((player_board[pos_x][pos_y]) == tile2) or ((player_board[pos_x][pos_y]) == tile3) or ((player_board[pos_x][pos_y]) == tile4) or ((player_board[pos_x][pos_y]) == tile5) or ((player_board[pos_x][pos_y]) == tile6) or ((player_board[pos_x][pos_y]) == tile7)) and (button[2]) and (alive == True):
+					if ((adjacent_amount(player_board, pos_x, pos_y, "tileFlag")) == 1):
+						print("AGGGGGGGGGGGGGGHHHHHHHHHHHH")
+						#why no work :(
+
+				if (not_mines == 0):
+					win(player_board, hidden_board)
 
 			if event.type == pygame.QUIT:
 				run = False
@@ -151,9 +215,15 @@ def runner(width, height, mines):
 		pygame.display.update()
 	pygame.quit
 
-	#check first opened space and set that space, and adjacent to not be able to be mines
-	#generate board, both hidden and to show the player
-	#check where they move and open / flag
-	#if all mines are flagged they win
-
 runner(width, height, mines) #width, height, mines
+
+
+
+
+'''
+#todo:
+---1: loss state (if click mine)
+---2: win state (if all mines flagged and all non mines opened)
+---3: opening empty opens all adjacent
+4: space bar opens if enough adjacent flags or flags 
+'''

@@ -30,26 +30,26 @@ def place_mines(height, width, mines, x, y): #sets where the mines are
 			i += 1
 	return board
 
-def adjacent_amount(board, x, y):
+def adjacent_amount(board, x, y, value):
 	width = len(board) - 1
 	height = len(board[x]) - 1
 
 	amount = 0
-	if (x != 0) and (y != 0) and (board[x-1][y-1] == True): #top left
+	if (x != 0) and (y != 0) and (board[x-1][y-1] == value): #top left
 		amount += 1
-	if (x != 0) and (board[x-1][y] == True): #middle left
+	if (x != 0) and (board[x-1][y] == value): #middle left
 		amount += 1
-	if (x != 0) and (y != height) and (board[x-1][y+1] == True):# bottom left
+	if (x != 0) and (y != height) and (board[x-1][y+1] == value):# bottom left
 		amount += 1
-	if (y != 0) and (board[x][y-1] == True): #top middle
+	if (y != 0) and (board[x][y-1] == value): #top middle
 		amount += 1
-	if (y != height) and (board[x][y+1] == True): #bottom middle
+	if (y != height) and (board[x][y+1] == value): #bottom middle
 		amount += 1
-	if (x != width) and (y != 0) and (board[x+1][y-1] == True): #top right
+	if (x != width) and (y != 0) and (board[x+1][y-1] == value): #top right
 		amount += 1
-	if (x != width) and (board[x+1][y] == True): #middle right
+	if (x != width) and (board[x+1][y] == value): #middle right
 		amount += 1
-	if (x != width) and (y != height) and (board[x+1][y+1] == True):
+	if (x != width) and (y != height) and (board[x+1][y+1] == value):
 		amount += 1
 	return amount
 
@@ -63,7 +63,7 @@ def generate_nums(board):
 		while y < len(board[x]):
 			#print (x)
 			if board[x][y] == False:
-				board[x][y] = adjacent_amount(board, x, y)
+				board[x][y] = adjacent_amount(board, x, y, True)
 			y += 1
 		x += 1
 
@@ -78,7 +78,7 @@ def generate_num_outOfPlace(board):
 		y = 0
 		while y < len(board[x]):
 			if board[x][y] == False:
-				newBoard[x].append(str(adjacent_amount(board, x, y)))
+				newBoard[x].append(str(adjacent_amount(board, x, y, True)))
 			else:
 				newBoard[x].append(True)
 			y += 1
