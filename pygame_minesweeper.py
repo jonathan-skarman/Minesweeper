@@ -1,12 +1,11 @@
 #variables, only positive integers, dont know what happens otherwise
-width = 16
-height = 16
-mines = 40
+width = 10
+height = 10
+mines = 20
 
 alive = True
 not_mines = ((width * height) - mines)
 
-from turtle import delay
 import pygame
 import math
 from minesweeper import *

@@ -25,7 +25,7 @@ def place_mines(height, width, mines, x, y): #sets where the mines are
 		y_ = randint(0, height - 1)
 
 		#makes sure tile clicked and adjacent are safe, and current tile isn't a mine
-		if (not((x_ == x) or (x_ == x -1) or (x_ == x +1) or (y_ == y) or (y_ == y -1) or (y_ == y +1))) and (not(board[x_][y_] == True)):
+		if (not(((x_ == x) or (x_ == x -1) or (x_ == x +1)) and ((y_ == y) or (y_ == y -1) or (y_ == y +1)))) and (not(board[x_][y_] == True)):
 			board[x_][y_] = True #if already true
 			i += 1
 	return board
