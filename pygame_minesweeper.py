@@ -222,8 +222,5 @@ runner(width, height, mines) #width, height, mines
 
 '''
 #todo:
----1: loss state (if click mine)
----2: win state (if all mines flagged and all non mines opened)
----3: opening empty opens all adjacent
-4: space bar opens if enough adjacent flags or flags 
+4: being able to open adjacent if enough adjacent flags
 '''
