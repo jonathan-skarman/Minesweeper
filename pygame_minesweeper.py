@@ -1,7 +1,7 @@
 #variables, only positive integers, dont know what happens otherwise
-width = 10
-height = 10
-mines = 20
+width = 16
+height = 16
+mines = 40
 
 alive = True
 not_mines = ((width * height) - mines)
